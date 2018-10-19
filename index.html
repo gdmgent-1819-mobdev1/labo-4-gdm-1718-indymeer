@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="img/tinder-logo.png" type="image/png" sizes="16x16">
+
+    
+
+    <link href='https://api.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css' rel='stylesheet' />
+
+    <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
+
+
+
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+
+
+    
+</head>
+<body>
+
+    <div class='container' id='container'>
+
+      
+        <div class="tinder--status">
+         <!-- 
+          <i class="fa fa-remove"></i>
+          <i class="fa fa-heart"></i>-->
+        </div>
+   
+
+        <div class='card-wrapper' id="card-wrapper">
+       
+       <!--   <div class='main-window' id='main-window'>
+            <div class='user-info'>
+                <div id='map'></div>
+            </div>
+
+      
+           
+            <div class='user-info'>
+              <div class='quote'>"Where there is coffee, there is life. Loves to read, paint and sleep."</div>
+            </div>
+      
+            <div class='social-info'>
+              <div class='social-info-elm'>FOLLOWERS<br><span class='lg'>1293</span></div>
+              <div class='social-info-elm'>FOLLOWING<br><span class='lg'>219</span></div>
+              <div class='social-info-elm'>STORIES<br><span class='lg'>92</span></div>
+            </div>
+      
+          </div>
+         
+      </div>
+      <div class='main-window' id='main-window'>
+        <div class='user-info'>
+            <div id='map'></div>
+        </div>
+        -->
+
+  </div>
+    
+  <!--
+        <div class='second-window' id='second-window'>
+          
+        </div>
+        <div class='third-window' id='third-window'>
+         
+        </div>
+        -->
+        <ul class='controls'>
+                <li class='pass'>
+                  <button  class='fa fa-times' id="nope"></button>
+                </li>
+                <li>
+                    <a href=# class="fas fa-map-marker-alt" id="mapIcon" onclick="iconButton()"></a>
+                </li>
+                <li class='like'>
+                  <button class='fa fa-check' id="like"></button>
+                </li>
+              </ul>
+              <div class='arrow' id='previous'><i class="fa fa-arrow-left" aria-hidden="true"></i></div>
+              <div class='arrow' id='next'><i class="fa fa-arrow-right" aria-hidden="true"></i></div>
+        </div>
+        
+      <div id="overlay1">
+        <h3>Dislike </h3>
+        <p id ="text1"> </p>
+        <a href="#" class="close-thik" id="close"></a>
+
+      </div>
+
+      <div id="overlay2">
+        <h3>Like </h3>
+        <p id ="text2"> </p>
+        <a href="#" class="close-thik" id="close2"></a>
+      </div>
+
+      </div>
+     
+
+
+      <script src="main.js"></script>
+      
+    <script src='https://api.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js'></script>
+
+   
+</body>
+</html>
