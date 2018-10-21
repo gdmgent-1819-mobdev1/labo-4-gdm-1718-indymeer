@@ -3,15 +3,12 @@
 ERRORS:
 
 - toggleIcon werkt alleen op de eerste met getElementbyId
-- De afstand wordt alleen op de eerste getoond
-- Na 9 personen in te laden weigert hij om er nieuwe in te genereren aangezien er zogezegd 10 in mijn html staan.
+- Zie regel 608, elke keer hij er 10 in laad, telt hij per keer 1 extra bij
 
 
 TODO:
 
 - Naar links of rechts swipen wordt ook gezien als een dislike button zodat het tussen de lijst komt te staan
-
-
 
 
 ------------------------------------------------------------------------------*/
@@ -111,10 +108,17 @@ function fetchData() {
                 quote.id = "quote";
     
                 main.innerHTML = "";
-                li.innerHTML = "<div id=\"map\"></div>"
                 image.style.background = 'url(' + authors.picture.large + ')';
                 span.innerHTML =  authors.name.first + authors.name.last;
                 quote.innerHTML = "age" + " " + authors.dob.age +'<br>' + authors.location.city ;
+/*toegevoegd*/
+		
+			/*
+			getposition hier aanroepen om elk object een afstand mee te geven
+			de gewone vond het element van de quote niet dus heb ik hem een beetje aangepast
+			naar setPositionForQuote(container)
+			*/
+			setPositionForQuote(quote)
     
     
                 append(info, quote);
@@ -158,7 +162,7 @@ function renderNewPerson(person) {
 
 
 // dislike button
-
+/*
 bad.addEventListener("click", function (event) {
     event.preventDefault();
 
@@ -174,7 +178,7 @@ bad.addEventListener("click", function (event) {
 
     setupMap();
     distanceKm();
-
+/*
     console.log(index);
     if (index >= 9) {
         index = 0;
@@ -209,7 +213,7 @@ good.addEventListener("click", function (event) {
 
 
     //console.log(currentProfile.name);
-    console.log(index);
+/*    console.log(index);
     if (index >= 9) {
         index = 0;
         return functie;
@@ -219,7 +223,7 @@ good.addEventListener("click", function (event) {
     }
 
 })
-
+*/
 
 //show list like
 next.addEventListener("click", function () {
@@ -306,7 +310,6 @@ function iconButton() {
 // create elements plus insert json : beginnende array 
 
 const ul = document.getElementById('card-wrapper');
-let functie =
 fetch('https://randomuser.me/api?results=10').then(response => {
     return response.json();
 }).then(data => {
@@ -366,11 +369,17 @@ fetch('https://randomuser.me/api?results=10').then(response => {
             quote.id = "quote";
 
             main.innerHTML = "";
-            li.innerHTML = "<div id=\"map\"></div>"
             image.style.background = 'url(' + authors.picture.large + ')';
             span.innerHTML =  authors.name.first + authors.name.last;
             quote.innerHTML = "age" + " " + authors.dob.age +'<br>' + authors.location.city ;
-
+/*toegevoegd*/
+		
+			/*
+			getposition hier aanroepen om elk object een afstand mee te geven
+			de gewone vond het element van de quote niet dus heb ik hem een beetje aangepast
+			naar setPositionForQuote(container)
+			*/
+			setPositionForQuote(quote)
 
             append(info, quote);
             append(li, image);
@@ -383,7 +392,8 @@ fetch('https://randomuser.me/api?results=10').then(response => {
     }
     create();
     setupMap();
-    getPosition();
+/*verwijderd*/
+    //getPosition();
 
     swipe();
 
@@ -393,8 +403,6 @@ fetch('https://randomuser.me/api?results=10').then(response => {
     console.log(error.message);
 });
 
-
-;
 // MAP
 
 let i= 0;
@@ -457,10 +465,42 @@ let i= 0;
 
      
     }
+/*toegevoegd*/
+  
+function setPositionForQuote(container){
+	if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          let lat2 = position.coords.latitude,
+              lng2 = position.coords.longitude,
+              latlng = [lng2, lat2];
+              localStorage.setItem("coord", JSON.stringify(latlng));
     
-
-
+          let marker = new mapboxgl.Marker()
+          .setLngLat(latlng);
     
+});
+appendKm(container);
+
+      }
+}
+function appendKm(container){
+	let array = JSON.parse(localStorage.getItem('coord'));
+
+    let  lat1 = array[0];
+    let lon1 = array[1];
+    let lat2 =  people[index].lat;
+    let lon2 = people[index].lng;
+    let R = 6371; // Radius of the earth in km
+    let dLat = (lat2 - lat1) * Math.PI / 180;  // deg2rad below
+    let dLon = (lon2 - lon1) * Math.PI / 180;
+    let a = 
+       0.5 - Math.cos(dLat)/2 + 
+       Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+       (1 - Math.cos(dLon))/2;
+       container.innerHTML += " " +  Math.ceil(R * 2 * Math.asin(Math.sqrt(a))) + "km";
+}
+
+  /*  
     function getPosition() {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -498,7 +538,26 @@ function distanceKm() {
 
    
   }
+*/
+/*
+function checkIfCardsNeedToBeReplaced(){
+    let cards = document.querySelectorAll('.main-window:not(.removed)');
+  
+        if(cards.length === 9){
+            return functie;
+        }
+        else{
+          clearMainWindow()
+          fetchData()          }
+   
+    
+}checkIfCardsNeedToBeReplaced();
 
+
+  function clearMainWindow() {
+    document.querySelectorAll('.main-window:not(.removed)').innerHTML = "";
+  }
+  */
 function swipe(){
 
   let tinderContainer = document.querySelector('#card-wrapper');
@@ -516,14 +575,7 @@ function swipe(){
     });
     
     tinderContainer.classList.add('loaded');
-    if (index >= 9) {
-        index = 0;
-        fetch();
-
-    } else {
-        index++;
-    }
-
+    
 
   }
   
@@ -559,10 +611,19 @@ function swipe(){
       let keep = Math.abs(event.deltaX) < 80 || Math.abs(event.velocityX) < 0.5;
   
       event.target.classList.toggle('removed', !keep);
-  
+/*toegevoegd*/
+  let card = document.querySelectorAll('.main-window:not(.removed)')[0]
+
       if (keep) {
         event.target.style.transform = '';
+/*toegevoegd*/
+		console.log("love for: " + card.innerText.split(" ")[0].split("\n")[0])
+		 // checkIfCardsNeedToBeReplaced(card)
       } else {
+/*toegevoegd*/
+		console.log("nope for: " + card.innerText.split(" ")[0].split("\n")[0])
+		  //checkIfCardsNeedToBeReplaced(card)
+		
         let endX = Math.max(Math.abs(event.velocityX) * moveOutWidth, moveOutWidth);
         let toX = event.deltaX > 0 ? endX : -endX;
         let endY = Math.abs(event.velocityY) * moveOutWidth;
@@ -576,11 +637,24 @@ function swipe(){
       }
     });
   });
+
   
   function createButtonListener(love) {
     return function (event) {
       let cards = document.querySelectorAll('.main-window:not(.removed)');
       let moveOutWidth = document.body.clientWidth * 1.5;
+      array = people[index];
+  
+
+      // checken als er 9 items zijn, fetch nieuwe data indien het 9 getelt wordt
+      console.log(index);
+      if (index >= 9) {
+          index = 0;
+          return fetchData();
+  
+      } else {
+          index++;
+      }
   
       if (!cards.length) return false;
   
@@ -589,9 +663,41 @@ function swipe(){
       card.classList.add('removed');
   
       if (love) {
+        
+
+    let array = JSON.parse(localStorage.getItem('test'));
+
+    array = people[index];
+
+    like_button.push(people[index]);
+
+    renderNewPerson(array);
+    setupMap();
+    distanceKm();
+
+
         card.style.transform = 'translate(' + moveOutWidth + 'px, -100px) rotate(-30deg)';
+/*toegevoegd*/
+		console.log("love for: " + card.innerText.split(" ")[0].split("\n")[0])
+
       } else {
+        
+
+    let array = JSON.parse(localStorage.getItem('test'));
+
+    array = people[index];
+
+    dislike_button.push(people[index]);
+
+    renderNewPerson(array);
+    setupMap();
+    distanceKm();
+
+
         card.style.transform = 'translate(-' + moveOutWidth + 'px, -100px) rotate(30deg)';
+/*toegevoegd*/
+		console.log("nope for: " + card.innerText.split(" ")[0].split("\n")[0])
+
       }
   
       initCards();
