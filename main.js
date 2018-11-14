@@ -131,6 +131,20 @@ function fetchData() {
 
             }
         }
+        function initCards(card, index) {
+            let allCards = document.querySelectorAll('#main-window');
+
+            let newCards = document.querySelectorAll('#main-window:not(.removed)');
+          
+            newCards.forEach(function (card, index) {
+           card.style.zIndex = allCards.length - index;
+             card.style.zIndex = (10 - index) / 10;
+            });
+                        
+        
+          }
+          
+          initCards();
         create()
         setupMap();
 
@@ -163,9 +177,9 @@ function renderNewPerson(person) {
 
 
 // dislike button
-/*
-bad.addEventListener("click", function (event) {
-    event.preventDefault();
+function disLike(){
+   // event.preventDefault();
+   let cards = document.querySelectorAll('#main-window');
 
     let array = JSON.parse(localStorage.getItem('test'));
 
@@ -177,27 +191,43 @@ bad.addEventListener("click", function (event) {
 
     renderNewPerson(array);
 
-    setupMap();
-    distanceKm();
-/*
+   // setupMap();
+  //  distanceKm();
+
+  let card = cards[index];
+  
+  card.classList.add('removed');
+
+
+
     console.log(index);
     if (index >= 9) {
         index = 0;
-        return functie;
+        return fetchData();
 
     } else {
         index++;
     }
 
+}
 
-})
+bad.addEventListener("click", disLike);
+
+
+
+
+
+
+
 
 
 
 // like button
 
-good.addEventListener("click", function (event) {
-    event.preventDefault();
+function Like(){
+   // event.preventDefault();
+   let cards = document.querySelectorAll('#main-window');
+
     console.log("good button clicked")
    
 
@@ -209,22 +239,27 @@ good.addEventListener("click", function (event) {
     like_button.push(people[index]);
 
     renderNewPerson(array);
-    setupMap();
-    distanceKm();
-
+    //setupMap();
+   // distanceKm();
+   let card = cards[index];
+  
+   card.classList.add('removed');
+ 
 
     //console.log(currentProfile.name);
-/*    console.log(index);
+   console.log(index);
     if (index >= 9) {
         index = 0;
-        return functie;
+        return fetchData();
 
     } else {
         index++;
     }
 
-})
-*/
+}
+
+good.addEventListener("click", Like);
+
 
 //show list like
 next.addEventListener("click", function () {
@@ -393,11 +428,22 @@ fetch('https://randomuser.me/api?results=10').then(response => {
     }
     create();
     setupMap();
+    function initCards(card, index) {
+        let allCards = document.querySelectorAll('#main-window');
+
+        let newCards = document.querySelectorAll('#main-window:not(.removed)');
+      
+        newCards.forEach(function (card, index) {
+       card.style.zIndex = allCards.length - index;
+         card.style.zIndex = (10 - index) / 10;
+        });
+                    
+    
+      }
+
+      initCards();
 /*verwijderd*/
     //getPosition();
-
-    swipe();
-
 
 
 }).catch(function (error) {
@@ -501,216 +547,39 @@ function appendKm(container){
        container.innerHTML += " " +  Math.ceil(R * 2 * Math.asin(Math.sqrt(a))) + "km";
 }
 
-  /*  
-    function getPosition() {
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-          let lat2 = position.coords.latitude,
-              lng2 = position.coords.longitude,
-              latlng = [lng2, lat2];
-              localStorage.setItem("coord", JSON.stringify(latlng));
-    
-          let marker = new mapboxgl.Marker()
-          .setLngLat(latlng);
-    
-});
-distanceKm();
 
-      }
+document.addEventListener('dragstart', dragStart);
+		document.addEventListener('dragend', dragEnd);
+		document.addEventListener('drop', dragDrop);
+		document.addEventListener('dragover', dragOver);
+		function dragStart(e){
+            e.target.style.opacity = .3;
 
-}
-// code om de afstand te berekenen
+			e.dataTransfer.setData("clickedButton", e.target.id);
+			e.dataTransfer.dropEffect = "move";
+		}
+		function dragEnd(e){
+			e.preventDefault();
+            e.target.style.opacity = 1.0;
 
-function distanceKm() {
-    let array = JSON.parse(localStorage.getItem('coord'));
+		}
+		function dragDrop(e) {
+            e.preventDefault();
 
-    let  lat1 = array[0];
-    let lon1 = array[1];
-    let lat2 =  people[index].lat;
-    let lon2 = people[index].lng;
-    let R = 6371; // Radius of the earth in km
-    let dLat = (lat2 - lat1) * Math.PI / 180;  // deg2rad below
-    let dLon = (lon2 - lon1) * Math.PI / 180;
-    let a = 
-       0.5 - Math.cos(dLat)/2 + 
-       Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-       (1 - Math.cos(dLon))/2;
-       document.getElementById('quote').innerHTML += " " +  Math.ceil(R * 2 * Math.asin(Math.sqrt(a))) + "km";
+			// only drop on dropzones
+			if (e.toElement.className === "likedropzone") {
+                //e.target.classList.add('removed'); 
 
-   
-  }
-*/
-/*
-function checkIfCardsNeedToBeReplaced(){
-    let cards = document.querySelectorAll('.main-window:not(.removed)');
-  
-        if(cards.length === 9){
-            return functie;
-        }
-        else{
-          clearMainWindow()
-          fetchData()          }
-   
-    
-}checkIfCardsNeedToBeReplaced();
+                Like();
 
+			}else{
+              //  e.target.classList.add('removed'); 
 
-  function clearMainWindow() {
-    document.querySelectorAll('.main-window:not(.removed)').innerHTML = "";
-  }
-  */
-function swipe(){
+            disLike();
 
-  let tinderContainer = document.querySelector('#card-wrapper');
-  let allCards = document.querySelectorAll('#main-window');
-  let tinderStatus = document.querySelector('.tinder--status')
-  let nope = document.getElementById('nope');
-  let love = document.getElementById('like');
-  
-  function initCards(card, index) {
-    let newCards = document.querySelectorAll('#main-window:not(.removed)');
-  
-    newCards.forEach(function (card, index) {
-   card.style.zIndex = allCards.length - index;
-     card.style.opacity = (10 - index) / 10;
-    });
-    
-    tinderContainer.classList.add('loaded');
-    
+			}
+		}
+		function dragOver(e) {
+			e.preventDefault();
+		}
 
-  }
-  
-  initCards();
-  
-  allCards.forEach(function (el) {
-    let hammertime = new Hammer(el);
-  
-    hammertime.on('pan', function (event) {
-      el.classList.add('moving');
-    });
-  
-    hammertime.on('pan', function (event) {
-      if (event.deltaX === 0) return;
-      if (event.center.x === 0 && event.center.y === 0) return;
-  
-      tinderStatus.classList.toggle('fa-heart', event.deltaX > 0);
-      tinderStatus.classList.toggle('fa-remove', event.deltaX < 0);
-  
-      let xMulti = event.deltaX * 0.03;
-      let yMulti = event.deltaY / 80;
-      let rotate = xMulti * yMulti;
-  
-      event.target.style.transform = 'translate(' + event.deltaX + 'px, ' + event.deltaY + 'px) rotate(' + rotate + 'deg)';
-    });
-  
-    hammertime.on('panend', function (event) {
-      el.classList.remove('moving');
-      tinderStatus.classList.remove('fa-heart');
-      tinderStatus.classList.remove('fa-remove');
-  
-      let moveOutWidth = document.body.clientWidth;
-      let keep = Math.abs(event.deltaX) < 80 || Math.abs(event.velocityX) < 0.5;
-  
-      event.target.classList.toggle('removed', !keep);
-/*toegevoegd*/
-  let card = document.querySelectorAll('.main-window:not(.removed)')[0]
-
-      if (keep) {
-        event.target.style.transform = '';
-/*toegevoegd*/
-		console.log("love for: " + card.innerText.split(" ")[0].split("\n")[0])
-		 // checkIfCardsNeedToBeReplaced(card)
-      } else {
-/*toegevoegd*/
-		console.log("nope for: " + card.innerText.split(" ")[0].split("\n")[0])
-		  //checkIfCardsNeedToBeReplaced(card)
-		
-        let endX = Math.max(Math.abs(event.velocityX) * moveOutWidth, moveOutWidth);
-        let toX = event.deltaX > 0 ? endX : -endX;
-        let endY = Math.abs(event.velocityY) * moveOutWidth;
-        let toY = event.deltaY > 0 ? endY : -endY;
-        let xMulti = event.deltaX * 0.03;
-        let yMulti = event.deltaY / 80;
-        let rotate = xMulti * yMulti;
-  
-        event.target.style.transform = 'translate(' + toX + 'px, ' + (toY + event.deltaY) + 'px) rotate(' + rotate + 'deg)';
-        initCards();
-      }
-    });
-  });
-
-  
-  function createButtonListener(love) {
-    return function (event) {
-      let cards = document.querySelectorAll('.main-window:not(.removed)');
-      let moveOutWidth = document.body.clientWidth * 1.5;
-      array = people[index];
-  
-
-      // checken als er 9 items zijn, fetch nieuwe data indien het 9 getelt wordt
-      console.log(index);
-      if (index >= 9) {
-          index = 0;
-          return fetchData();
-  
-      } else {
-          index++;
-      }
-  
-      if (!cards.length) return false;
-  
-      let card = cards[0];
-  
-      card.classList.add('removed');
-  
-      if (love) {
-        
-
-    let array = JSON.parse(localStorage.getItem('test'));
-
-    array = people[index];
-
-    like_button.push(people[index]);
-
-    renderNewPerson(array);
-    setupMap();
-    distanceKm();
-
-
-        card.style.transform = 'translate(' + moveOutWidth + 'px, -100px) rotate(-30deg)';
-/*toegevoegd*/
-		console.log("love for: " + card.innerText.split(" ")[0].split("\n")[0])
-
-      } else {
-        
-
-    let array = JSON.parse(localStorage.getItem('test'));
-
-    array = people[index];
-
-    dislike_button.push(people[index]);
-
-    renderNewPerson(array);
-    setupMap();
-    distanceKm();
-
-
-        card.style.transform = 'translate(-' + moveOutWidth + 'px, -100px) rotate(30deg)';
-/*toegevoegd*/
-		console.log("nope for: " + card.innerText.split(" ")[0].split("\n")[0])
-
-      }
-  
-      initCards();
-      event.preventDefault();
-    };
-  }
-  
-  let nopeListener = createButtonListener(false);
-  let loveListener = createButtonListener(true);
-  
-  nope.addEventListener('click', nopeListener);
-  love.addEventListener('click', loveListener);
-
-
-}
